@@ -58,7 +58,7 @@ const App: React.FC = () => {
         <input
           type='range'
           min='0.1'
-          max='2'
+          max='10'
           step='0.1'
           value={scale}
           onChange={(e) => setScale(parseFloat(e.target.value))}
