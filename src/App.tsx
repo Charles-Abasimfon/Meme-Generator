@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { SketchPicker, ColorResult } from 'react-color';
 import domtoimage from 'dom-to-image';
 import './App.css';
@@ -12,9 +12,9 @@ const App: React.FC = () => {
   const [bottomText, setBottomText] = useState<string>('');
   const [color, setColor] = useState<string>('#000000');
 
-  const imgContainerRef = React.useRef<HTMLDivElement>(null);
+  const imgContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const handleDownloadMeme = () => {
+  const handleDownloadMeme = (): void => {
     if (imgContainerRef.current) {
       domtoimage
         .toPng(imgContainerRef.current)
@@ -24,7 +24,7 @@ const App: React.FC = () => {
           link.href = dataUrl;
           link.click();
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
           console.error('oops, something went wrong!', error);
         });
     }
@@ -87,10 +87,7 @@ const App: React.FC = () => {
         />
 
         {imageUrl && (
-          <button
-            className='download-btn'
-            onClick={handleDownloadMeme}
-          >
+          <button className='download-btn' onClick={handleDownloadMeme}>
             Download Meme
           </button>
         )}
