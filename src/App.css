@@ -9,7 +9,7 @@
 .settings-container{
   display: flex;
   width: 300px;
-  padding: 30px 30px 64px 30px;
+  padding: 10px 30px 50px 30px;
   flex-direction: column;
   align-items: center;
   border-radius: 5px;
@@ -40,6 +40,21 @@
   padding: 10px;
   font-size: 40px;
   text-align: center;
+}
+
+.download-btn{
+  background-color: #FFF;
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.download-btn:hover{
+  background-color: #000;
+  color: #FFF;
 }
 
 .app input[type="text"],

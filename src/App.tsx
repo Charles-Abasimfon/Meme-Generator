@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SketchPicker, ColorResult } from 'react-color';
+import domtoimage from 'dom-to-image';
 import './App.css';
 
 const App: React.FC = () => {
@@ -11,6 +12,24 @@ const App: React.FC = () => {
   const [bottomText, setBottomText] = useState<string>('');
   const [color, setColor] = useState<string>('#000000');
 
+  const imgContainerRef = React.useRef<HTMLDivElement>(null);
+
+  const handleDownloadMeme = () => {
+    if (imgContainerRef.current) {
+      domtoimage
+        .toPng(imgContainerRef.current)
+        .then((dataUrl: string) => {
+          const link = document.createElement('a');
+          link.download = 'image.png';
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch((error: any) => {
+          console.error('oops, something went wrong!', error);
+        });
+    }
+  };
+
   return (
     <div className='app'>
       <div className='settings-container'>
@@ -21,7 +40,9 @@ const App: React.FC = () => {
         />
         <div>
           <span>Rotation: </span>
-          <span>{rotation} <sup>o</sup></span>
+          <span>
+            {rotation} <sup>o</sup>
+          </span>
         </div>
         <input
           type='range'
@@ -42,7 +63,7 @@ const App: React.FC = () => {
           value={scale}
           onChange={(e) => setScale(parseFloat(e.target.value))}
         />
-        <div style={{display:"flex", alignItems:"center"}}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <span>Mirror Image</span>
           <input
             type='checkbox'
@@ -64,35 +85,45 @@ const App: React.FC = () => {
           color={color}
           onChangeComplete={(color: ColorResult) => setColor(color.hex)}
         />
-      </div>
-      <div className='img-container'>
-        {imageUrl && (
-          <img
-            src={imageUrl}
-            style={{
-              transform: `rotate(${rotation}deg) scaleX(${
-                mirror ? -1 : 1
-              }) scale(${scale})`,
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-            }}
-          />
-        )}
 
-        <div
-          className='img-text'
-          style={{ position: 'absolute', top: 0, color: color }}
-        >
-          {topText}
-        </div>
-        <div
-          className='img-text'
-          style={{ position: 'absolute', bottom: 0, color: color }}
-        >
-          {bottomText}
-        </div>
+        {imageUrl && (
+          <button
+            className='download-btn'
+            onClick={handleDownloadMeme}
+          >
+            Download Meme
+          </button>
+        )}
       </div>
+      {imageUrl && (
+        <div ref={imgContainerRef}>
+          <div className='img-container'>
+            <img
+              src={imageUrl}
+              style={{
+                transform: `rotate(${rotation}deg) scaleX(${
+                  mirror ? -1 : 1
+                }) scale(${scale})`,
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+              }}
+            />
+            <div
+              className='img-text'
+              style={{ position: 'absolute', top: 0, color: color }}
+            >
+              {topText}
+            </div>
+            <div
+              className='img-text'
+              style={{ position: 'absolute', bottom: 0, color: color }}
+            >
+              {bottomText}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
